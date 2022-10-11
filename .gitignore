@@ -1,8 +1,16 @@
+.DS_Store
+
+# build
+/assets/main.css
+
 # dependencies
 node_modules
 
 # logs
 npm-debug.log
 
-# environment variables
-.env
+/.env
+
+# IDE
+.idea
+.vscode

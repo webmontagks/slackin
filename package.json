@@ -1,0 +1,140 @@
+{
+  "name": "slackin-extended",
+  "version": "2.2.2",
+  "description": "Public Slack organizations made easy",
+  "repository": "emedvedev/slackin-extended",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "bin": {
+    "slackin": "./bin/slackin.js"
+  },
+  "files": [
+    "assets/*.{css,js,svg,png,ico}",
+    "bin/slackin.js",
+    "lib/*.js",
+    "views/*.pug"
+  ],
+  "dependencies": {
+    "args": "^5.0.3",
+    "autoprefixer": "^10.4.8",
+    "body-parser": "^1.20.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "debug": "^4.3.4",
+    "dotenv": "^16.0.1",
+    "email-regex": "^4.0.0",
+    "errorhandler": "^1.5.1",
+    "express": "^4.18.1",
+    "hostenv": "3.13.0",
+    "micromatch": "^4.0.5",
+    "morgan": "^1.10.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.12",
+    "postcss-cli": "^9.1.0",
+    "pug": "^3.0.2",
+    "resolve-pkg": "^2.0.0",
+    "sass": "^1.54.5",
+    "serve-favicon": "^2.5.0",
+    "socket.io": "^4.4.1",
+    "superagent": "^7.1.1",
+    "tinycolor2": "^1.4.2"
+  },
+  "devDependencies": {
+    "lockfile-lint": "^4.7.4",
+    "mocha": "^10.0.0",
+    "nock": "^13.2.4",
+    "nodemon": "^2.0.19",
+    "stylelint": "^14.10.0",
+    "stylelint-config-twbs-bootstrap": "^3.0.1",
+    "supertest": "^6.2.4",
+    "xo": "^0.48.0"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "scripts": {
+    "dev": "nodemon --watch assets/ --watch lib/ --watch scss/ --ext js,scss,svg --exec \"npm-run-all build start\"",
+    "lint": "npm-run-all --parallel --continue-on-error lint:*",
+    "lint:css": "stylelint \"{assets,scss}/*.{css,scss}\"",
+    "lint:js": "xo",
+    "lint:lockfile": "lockfile-lint --allowed-hosts npm --allowed-schemes https: --empty-hostname false --type npm --path package-lock.json",
+    "mocha": "mocha --require ./test/setup --exit",
+    "test": "npm-run-all build lint mocha",
+    "build": "npm-run-all build:*",
+    "build:sass": "sass --style compressed --no-source-map --no-error-css scss/:assets/",
+    "build:prefix": "postcss --use autoprefixer --no-map --replace \"assets/*.css\" \"!assets/iframe-button.css\"",
+    "now-build": "npm run build && cp node_modules/superagent/superagent.js assets",
+    "start": "cross-env-shell node ./bin/slackin.js $SLACK_SUBDOMAIN $SLACK_API_TOKEN --coc \\\"$SLACKIN_COC\\\" --channels \\\"$SLACKIN_CHANNELS\\\"",
+    "prepublishOnly": "npm run build"
+  },
+  "xo": {
+    "space": true,
+    "rules": {
+      "arrow-parens": [
+        "error",
+        "always"
+      ],
+      "camelcase": "off",
+      "capitalized-comments": "off",
+      "comma-dangle": "off",
+      "curly": [
+        "error",
+        "multi-line"
+      ],
+      "import/extensions": "off",
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
+      "operator-linebreak": [
+        "error",
+        "before"
+      ],
+      "spaced-comment": "off",
+      "unicorn/explicit-length-check": "off",
+      "unicorn/no-array-for-each": "off",
+      "unicorn/numeric-separators-style": "off",
+      "unicorn/prefer-module": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "wrap-iife": [
+        "error",
+        "outside"
+      ]
+    },
+    "overrides": [
+      {
+        "files": "test/*.js",
+        "envs": [
+          "mocha"
+        ]
+      },
+      {
+        "files": "assets/*.js",
+        "parserOptions": {
+          "ecmaVersion": 3,
+          "sourceType": "script"
+        },
+        "envs": [
+          "browser"
+        ],
+        "rules": {
+          "no-multi-assign": "off",
+          "no-var": "off",
+          "object-shorthand": "off",
+          "prefer-arrow-callback": "off",
+          "prefer-destructuring": "off",
+          "semi": "off",
+          "unicorn/no-for-loop": "off",
+          "unicorn/numeric-separators-style": "off",
+          "unicorn/prefer-dom-node-append": "off",
+          "unicorn/prefer-dom-node-remove": "off",
+          "unicorn/prefer-math-trunc": "off",
+          "unicorn/prefer-modern-dom-apis": "off",
+          "unicorn/prefer-query-selector": "off",
+          "unicorn/prefer-string-starts-ends-with": "off"
+        }
+      }
+    ]
+  }
+}
